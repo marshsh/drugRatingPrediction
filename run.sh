@@ -16,20 +16,20 @@ unzip -u drugs_raw.zip -d `pwd`/data/raw
 
 echo
 echo "Extracting Reviews and Ratings to pickle list:"
-python ./python/extractReviews.py
+python ./python/corpus/extractReviews.py
 
 echo
 echo "Generating TRAIN Drug Reviews SMH reference text (lemmatized)"
-python python/reviews2ref.py "/data/raw/drugsComTrain_raw.tsv" "train_drugReviews"
+python python/corpus/reviews2ref.py "/data/raw/drugsComTrain_raw.tsv" "train_drugReviews"
 
 echo
 echo "Generating TEST Drug Reviews SMH reference text (lemmatized)"
-python python/reviews2ref.py "/data/raw/drugsComTest_raw.tsv" "test_drugReviews"
+python python/corpus/reviews2ref.py "/data/raw/drugsComTest_raw.tsv" "test_drugReviews"
 
 
 
 echo "Generating BOWs from 20 newsgroups reference text"
-python python/ref2corpus.py "./data/train_drugReviews.ref" "./data/stopwords_english.txt" "./data" -c 40000
+python python/corpus/ref2corpus.py "./data/train_drugReviews.ref" "./data/stopwords_english.txt" "./data" -c 40000
 
 echo "Genereting inverted file from corpus"
 smhcmd ifindex "./data/train_drugReviews40000.corpus" "./data/train_drugReviews40000.ifs"
