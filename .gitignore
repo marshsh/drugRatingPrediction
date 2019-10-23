@@ -1,6 +1,8 @@
 # User Defined #
 ################
 data/*
+results/*
+drugCom_SMH/*
 
 
 # Compiled source #

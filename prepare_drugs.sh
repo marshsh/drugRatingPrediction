@@ -4,6 +4,13 @@
 echo "Making /data directory"
 mkdir `pwd`/data
 
+echo "Making /results directory"
+mkdir `pwd`/results
+
+echo "Making /drugCom_SMH directory"
+mkdir `pwd`/drugCom_SMH
+
+
 echo "Downloading english stopwords"
 wget -cO ./data/stopwords_english.txt \
 	 https://raw.githubusercontent.com/pan-webis-de/authorid/master/data/stopwords_english.txt
@@ -37,3 +44,15 @@ smhcmd ifindex "./data/train_drugReviews40000.corpus" "./data/train_drugReviews4
 echo "Done processing drugCom corpus"
 echo
 echo
+echo
+
+echo "Discovering SMH topics for drugCom"
+python python/discoverTopics/smh_topic_discovery.py \
+    --tuple_size 2 \
+    --cooccurrence_threshold 0.10 \
+    --corpus train_drugReviews40000.corpus \
+    --overlap 0.90 \
+    --min_set_size 3 \
+    train_drugReviews40000.ifs \
+    train_drugReviews40000.vocab \
+    "./drugCom_SMH/"
