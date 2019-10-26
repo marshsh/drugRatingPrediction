@@ -86,13 +86,13 @@ def load_vocabulary(vocpath):
 	"""
 	vocabulary = {}
 
-	with codecs.open(vocpath, 'w', encoding = "utf-8") as f:
+	with codecs.open(vocpath, 'r', encoding = "utf-8") as f:
 		for line in f.readlines():
 			line2 = line.split(" = ")
 			last = line2[2].split(" ")
-			i = line2[1]
-			entry1 = last[0]
-			doc_freq = last[1]
+			i = int(line2[1])
+			entry1 = int(last[0])
+			doc_freq = int(last[1])
 			entry0 = line2[0]
 			vocabulary[entry0] = (i,entry1,doc_freq)
 
@@ -105,7 +105,7 @@ def ref2corpus(refpath, swpath, dirpath, cutoff=40000, min_doc_terms=1, nameTail
 	Reads reference file produced by wiki2ref, reuters2ref or 20newsgroups2ref
 	and generates a corpus file
 	"""
-	basename = os.path.basename(refpath).rstrip('.ref')
+	basename = os.path.basename(refpath).rstrip('.ref').rstrip('.ref4train')
 	corpuspath = dirpath + '/' + basename + str(cutoff) + '.corpus' + nameTail
 	vocpath = dirpath + '/' + basename + str(cutoff) + '.vocab'
 
@@ -128,9 +128,10 @@ def ref2corpus(refpath, swpath, dirpath, cutoff=40000, min_doc_terms=1, nameTail
 		print "Computing document vectors and saving them to", corpuspath
 		for line in codecs.open(refpath, encoding = "utf-8"):
 			line = re.sub(r'\d+', '', line)
-			ids = Counter([vocabulary[t][0] for t in term_re.findall(line)
-						   if t not in stopwords
-						   and vocabulary[t][0] < cutoff])
+			ids = Counter([vocabulary[t][0] for t in term_re.findall(line) 
+							if t in vocabulary
+							if t not in stopwords
+							and vocabulary[t][0] < cutoff])
 			if sum(ids.itervalues()) >= min_doc_terms:
 				bow = [i for i in sorted(ids.items())]
 				f.write(str(len(bow)) + ' ')
@@ -164,7 +165,7 @@ def main():
 			   cutoff = args.cutoff,
 			   min_doc_terms = args.min_doc_terms,
 			   nameTail = args.nameTail,
-			   buildVoc= args.vocPath)
+			   buildVoc= args.buildVoc)
 	
 if __name__ == "__main__":
 	main()

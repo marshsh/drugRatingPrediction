@@ -41,10 +41,11 @@ echo
 
 FILE=./data/train_drugReviews.ref
 # if [ -f "$FILE" ]; then
-# if TRUE ; then
-if FALSE ; then
+if true ; then
+# if false ; then
 	echo "$FILE exist"
 else 
+
 	echo "$FILE does not exist"
 	echo "Generating TRAIN Drug Reviews SMH reference text (lemmatized)"
 	python python/corpus/reviews2ref.py "/data/raw/drugsComTrain_raw.tsv" "train_drugReviews"
@@ -60,6 +61,7 @@ else
 	python python/corpus/ref2corpus.py "./data/train_drugReviews.ref" "./data/stopwords_english.txt" \
 				"./data" -c 40000 -voc
 	echo "Done with ALL TRAIN reviews."
+
 	python python/corpus/ref2corpus.py "./data/train_drugReviews.ref4train" "./data/stopwords_english.txt" \
 				"./data" -c 40000 -nt "4train"
 	echo "Done with TRAIN reviews that have a rating."
@@ -94,7 +96,7 @@ echo
 
 
 
-if TRUE ; then
+if true ; then
 	echo "$FILE exist"
 else 
 	echo
@@ -102,7 +104,7 @@ else
 	echo
 	echo
 	python python/discoverTopics/smh_topic_discovery.py \
-		--tuple_size 4 \
+		--tuple_size 2 \
 		--cooccurrence_threshold 0.10 \
 		--corpus train_drugReviews40000.corpus \
 		--overlap 0.90 \
@@ -121,8 +123,8 @@ echo
 echo
 
 
-# if TRUE ; then
-if FALSE ; then
+if true ; then
+# if  false ; then
 	echo "$FILE exist"
 else 
 	python python/discoverTopics/topicsReorder.py \
@@ -132,6 +134,7 @@ else
 		"./drugCom_SMH/smh_r2_l68_w0.1_s3_o0.9_m5train_drugReviews40000.ordered_models" \
 		"./drugCom_SMH/smh_r2_l68_w0.1_s3_o0.9_m5train_drugReviews40000.IFSwords2topicsOrd"
 
+fi
 echo
 echo
 echo "mmmmm"

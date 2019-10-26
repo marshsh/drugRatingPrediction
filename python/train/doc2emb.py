@@ -2,7 +2,7 @@
 Functions that return the corresponding embedding of a document.
 """
 from smh import listdb_load
-from topics import load_vocabulary, save_topics, save_time, get_models_docfreq, sort_topics, listdb_to_topics
+from python.discoverTopics.topics import load_vocabulary, save_topics, save_time, get_models_docfreq, sort_topics, listdb_to_topics
 import codecs
 
 
