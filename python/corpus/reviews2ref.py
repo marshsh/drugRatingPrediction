@@ -38,28 +38,48 @@ def review2ref(raw_tsv, out_name):
 	a database of lists and saves it to file.
 	"""
 	out_refpath = os.getcwd() + "/data/" + out_name + ".ref"
+	out_ref2Tpath = os.getcwd() + "/data/" + out_name + ".ref4train"
 	out_labelspath = os.getcwd() + "/data/" + out_name + ".labels"
 
 	fref = codecs.open(out_refpath, 'w', 'utf-8')
+	fref2train = codecs.open(out_ref2Tpath, 'w', 'utf-8')
 	flabels = codecs.open(out_labelspath, 'w', 'utf-8')
 
 	with open( os.getcwd() + raw_tsv, "r") as in_raw:
 
 		for line in in_raw.readlines():
 			s_line = line.split("\t")
-			
-			if len(s_line) >= 5:
+
+			# If there's a review we save it			
+			if len(s_line) >= 4:
 				review = s_line[3]
-				rating = s_line[4]
 
 				line = review.decode('utf-8').strip()
 				line2 = line.replace('\n',' ').replace('\r',' ').replace('`',' ')
-				tokened_line = line2tokens(line2)
+				tokened_line = line2tokens(line2) # Lemmatization Happens here
 
 				fref.write(' '.join(tokened_line) + '\n')
-				flabels.write(str(rating) + '\n')
+
+
+			# If the review has a rating, we save both for training purposes
+			if len(s_line) >= 5:
+				rating = s_line[4]
+
+				try:
+					rated = float(rating)
+				except ValueError as e:
+					continue
+
+				rating2 = rating.replace('\n','')
+
+				fref2train.write(' '.join(tokened_line) + '\n')
+				flabels.write(str(rated) + '\n')
+
+
+
 
 	fref.close()
+	fref2train.close()
 	flabels.close()
 
 
