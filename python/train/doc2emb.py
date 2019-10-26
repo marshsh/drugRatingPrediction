@@ -4,41 +4,67 @@ Functions that return the corresponding embedding of a document.
 from smh import listdb_load
 from python.discoverTopics.topics import load_vocabulary, save_topics, save_time, get_models_docfreq, sort_topics, listdb_to_topics
 import codecs
+import random
 
 
 
-def bowVector(doc):
-	"""
-	Returns a vector on which each entry i states how many times word i appears on the document
-	"""
 
 
-def BOWcorpus2emb(corpusFN, vocSize, labelsFN = None):
+def BOWcorpus2emb(corpusFN, vocSize, Train=False, Validate=False, labelsFN=None):
 	"""
 	Returns a generator of bow embeddings, taking documents from the pointed .corpus file
 	If using labelsFN, check that corpusFN and labelsFN are the same length (and correspond to each other)
 	"""
-	if labelsFN:
-		f = open(labelsFN, "r")
 
-	corpus = listdb_load(corpusFN)
+	if Train and Validate:
+		Validate = False
 
-	for doc in corpus.ldb:
-		emb = [0 for i in range(vocSize)]
+	# Setting the Train/Validate division prameters
+	if Train or Validate:
+		train_size = 0
+		with open(corpusFN, "r") as f:
+			for line in f:
+				train_size += 1
 
-		for wordBundle in doc:
+		# Use to divide train / validate
+		valNum = 0.2
+		valSize = int(train_size*valNum)
 
-			if wordBundle.item < vocSize:
-				emb[wordBundle.item] = wordBundle.freq
+		random.seed(12345678)
+		valIndexes = set(random.sample(range(train_size),valSize))
+
+
+	while True:
+		if labelsFN:
+			f = open(labelsFN, "r")
+
+		corpus = listdb_load(corpusFN)
+
+		for i, doc in enumerate(corpus.ldb):
+			# Block to handle Train/Validate division
+			if Train:
+				if index in valIndexes:
+					continue
+			elif Validate:
+				if index not in valIndexes:
+					continue
+			# Block ends.
+
+			emb = [0 for i in range(vocSize)]
+
+			for wordBundle in doc:
+
+				if wordBundle.item < vocSize:
+					emb[wordBundle.item] = wordBundle.freq
+
+			if labelsFN:
+				label = f.readline()
+				yield emb, label
+			else :
+				yield emb
 
 		if labelsFN:
-			label = f.readline()
-			yield emb, label
-		else :
-			yield emb
-
-	if labelsFN:
-		f.close()
+			f.close()
 
 
 
@@ -61,14 +87,14 @@ def load_words2topics(w2tFileName):
 	return words2topics
 
 
-def SMHcorpus2emb(corpusFN, w2tFileName, vocSize, topicsNum, labelsFN=None):
+def SMHcorpus2emb(corpusFN, w2tFileName, vocSize, topicsNum, Train=False, Validate=False, labelsFN=None):
 	"""
 	Returns a generator of embeddings of documents, taking documents from the pointed (.corpus) 
 	file, and returning for each document, a vetor whose entries represent the amount of influence 
 	of a topic_i in the document.
 	"""
 
-	smh_genera = _aux_SMH(corpusFN, w2tFileName, vocSize, topicsNum, labelsFN=labelsFN)
+	smh_genera = _aux_SMH(corpusFN, w2tFileName, vocSize, topicsNum, Train=Train, Validate=Validate, labelsFN=labelsFN)
 
 	for item in smh_genera:
 		yield item
@@ -76,11 +102,12 @@ def SMHcorpus2emb(corpusFN, w2tFileName, vocSize, topicsNum, labelsFN=None):
 
 
 
-def _aux_SMH(corpusFN, w2tFileName, vocSize, topicsNum, labelsFN=None, allVectors=False):
+def _aux_SMH(corpusFN, w2tFileName, vocSize, topicsNum, Train=False, Validate=False, labelsFN=None, allVectors=False):
 
 	words2topics = load_words2topics(w2tFileName)
 
 	bow_genera = BOWcorpus2emb(corpusFN, vocSize, labelsFN=labelsFN)
+
 
 	for bundle in bow_genera:
 		# Bifurcation with labels / without labels
@@ -115,12 +142,12 @@ def _aux_SMH(corpusFN, w2tFileName, vocSize, topicsNum, labelsFN=None, allVector
 
 
 
-def BOW_SMH_corpus2emb(corpusFN, w2tFileName, vocSize, topicsNum, labelsFN = None):
+def BOW_SMH_corpus2emb(corpusFN, w2tFileName, vocSize, topicsNum, Train=False, Validate=False, labelsFN = None):
 	"""
 	Concatenation of both SMHcorpus2emb() and BOWcorpus2emb() embeddings (BOW before Topics)
 	"""
 
-	vec_genera = _aux_SMH(corpusFN, w2tFileName, vocSize, topicsNum, labelsFN=labelsFN, allVectors=True)
+	vec_genera = _aux_SMH(corpusFN, w2tFileName, vocSize, topicsNum, Train=Train, Validate=Validate, labelsFN=labelsFN, allVectors=True)
 
 	for item in vec_genera:
 		yield item
