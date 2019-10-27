@@ -10,7 +10,7 @@ import random
 
 
 
-def BOWcorpus2emb(corpusFN, vocSize, Train=False, Validate=False, labelsFN=None):
+def BOWcorpus2emb(corpusFN, vocSize, Train=False, Validate=False, labelsFN=None, forSMH=False ):
 	"""
 	Returns a generator of bow embeddings, taking documents from the pointed .corpus file
 	If using labelsFN, check that corpusFN and labelsFN are the same length (and correspond to each other)
@@ -41,7 +41,7 @@ def BOWcorpus2emb(corpusFN, vocSize, Train=False, Validate=False, labelsFN=None)
 
 		corpus = listdb_load(corpusFN)
 
-		for i, doc in enumerate(corpus.ldb):
+		for index, doc in enumerate(corpus.ldb):
 			# Block to handle Train/Validate division
 			if Train:
 				if index in valIndexes:
@@ -58,11 +58,19 @@ def BOWcorpus2emb(corpusFN, vocSize, Train=False, Validate=False, labelsFN=None)
 				if wordBundle.item < vocSize:
 					emb[wordBundle.item] = wordBundle.freq
 
-			if labelsFN:
-				label = f.readline()
-				yield emb, label
+			if not forSMH:
+				if labelsFN:
+					label = float(f.readline())
+					yield ({ 'input_{}'.format(i):x for i,x in enumerate(emb)}, {'output':label})
+				else :
+					yield ({ 'input_{}'.format(i):x for i,x in enumerate(topic_emb)})
 			else :
-				yield emb
+				if labelsFN:
+					label = float(f.readline())
+					yield emb, label
+				else :
+					yield emb
+
 
 		if labelsFN:
 			f.close()
@@ -107,7 +115,7 @@ def _aux_SMH(corpusFN, w2tFileName, vocSize, topicsNum, Train=False, Validate=Fa
 
 	words2topics = load_words2topics(w2tFileName)
 
-	bow_genera = BOWcorpus2emb(corpusFN, vocSize, labelsFN=labelsFN)
+	bow_genera = BOWcorpus2emb(corpusFN, vocSize, Train=False, Validate=False, labelsFN=labelsFN)
 
 
 	for bundle in bow_genera:
@@ -119,10 +127,12 @@ def _aux_SMH(corpusFN, w2tFileName, vocSize, topicsNum, Train=False, Validate=Fa
 			bow_doc = bundle
 
 
-		topics_emb = [0 for i in range(topicsNum)]
+		topic_emb = [0 for i in range(topicsNum)]
 
 		for word in bow_doc:
-			wordTcs = words2topics[word] # gets Topics related to word
+			wordTcs = []
+			if word in words2topics:
+				wordTcs = words2topics[word] # gets Topics related to word
 			# sums topic frequencies to embedding
 			for doc, freq in wordTcs:
 				if doc < topicsNum:
@@ -135,9 +145,9 @@ def _aux_SMH(corpusFN, w2tFileName, vocSize, topicsNum, Train=False, Validate=Fa
 
 		# Yields embedding
 		if labelsFN:
-			yield topic_emb, label
+			yield ({ 'input_{}'.format(i):x for i,x in enumerate(topic_emb)}, {'output':label})
 		else :
-			yield topic_emb
+			yield ({ 'input_{}'.format(i):x for i,x in enumerate(topic_emb)})
 
 
 

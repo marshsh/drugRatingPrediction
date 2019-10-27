@@ -3,7 +3,7 @@
 data/*
 results/*
 drugCom_SMH/*
-
+logs/*
 
 # Compiled source #
 ###################
