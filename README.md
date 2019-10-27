@@ -19,7 +19,7 @@ De ellas, en el (.ifs) nos quedamos con 36278 palabras (lematizadas y sin StopWo
 
 TRAIN :
 (.tsv RAW) 209991
-(.ref2train) 143316
+(.ref4train) 143316
 (.ref) 
 (.labels) 143316
 (train_rate.pickle) 286636
@@ -27,8 +27,11 @@ TRAIN :
 
 (.corpus) 179282
 
-(.vocab) 36414
+(.vocab) 38247
 (.ifs) 36278
+
+topics: 1779
+(.words2topics) 38241 .... no importa que no coincida con (.vocab) eso sólo significa que no hay tópicos con las palabras que faltaron, y por eso se perdieron en el `smhcmd ifindex`, pero el númeroID de la palabra sigue siendo el renglón en el que se encuentra.
 
 
 TEST

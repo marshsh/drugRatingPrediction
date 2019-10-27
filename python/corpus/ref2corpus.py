@@ -107,7 +107,8 @@ def ref2corpus(refpath, swpath, dirpath, cutoff=40000, min_doc_terms=1, nameTail
 	"""
 	basename = os.path.basename(refpath).rstrip('.ref').rstrip('.ref4train')
 	corpuspath = dirpath + '/' + basename + str(cutoff) + '.corpus' + nameTail
-	vocpath = dirpath + '/' + basename + str(cutoff) + '.vocab'
+	vocpath = dirpath + '/' + basename + str(cutoff) + '.vocab'.replace("test","train")
+	# We want TEST documents to use TRAIN vocabulary.
 
 	# Check if vocpath exists
 	if not os.path.isfile(vocpath):

@@ -18,6 +18,7 @@ def BOWcorpus2emb(corpusFN, vocSize, Train=False, Validate=False, labelsFN=None)
 
 	if Train and Validate:
 		Validate = False
+		Train = False
 
 	# Setting the Train/Validate division prameters
 	if Train or Validate:

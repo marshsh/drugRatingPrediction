@@ -41,9 +41,10 @@ echo
 
 FILE=./data/train_drugReviews.ref
 # if [ -f "$FILE" ]; then
-if true ; then
-# if false ; then
+# if true ; then
+if false ; then
 	echo "$FILE exist"
+	echo "*SMH .ref and .corpus file generation* block Not marked for processing"
 else 
 
 	echo "$FILE does not exist"
@@ -97,7 +98,7 @@ echo
 
 
 if true ; then
-	echo "$FILE exist"
+	echo "*Topic Discovering* block Not marked for processing"
 else 
 	echo
 	echo "Discovering SMH topics for drugCom"
@@ -125,7 +126,7 @@ echo
 
 if true ; then
 # if  false ; then
-	echo "$FILE exist"
+	echo " *Topics Reordering* block Not marked for processing"
 else 
 	python python/discoverTopics/topicsReorder.py \
 	    "./drugCom_SMH/smh_r2_l68_w0.1_s3_o0.9_m5train_drugReviews40000.models"
