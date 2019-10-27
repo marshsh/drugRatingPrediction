@@ -126,7 +126,7 @@ def train(embeddingType,callbacksBool):
 			keras.callbacks.EarlyStopping(
 				monitor='val_loss', 
 				min_delta=0, 
-				patience=5, 
+				patience=20, 
 				verbose=0, 
 				mode='auto', 
 				baseline=None, 
