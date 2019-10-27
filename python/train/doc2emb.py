@@ -6,7 +6,7 @@ from python.discoverTopics.topics import load_vocabulary, save_topics, save_time
 import codecs
 import random
 
-
+import numpy as np
 
 
 
@@ -61,9 +61,9 @@ def BOWcorpus2emb(corpusFN, vocSize, Train=False, Validate=False, labelsFN=None,
 			if not forSMH:
 				if labelsFN:
 					label = float(f.readline())
-					yield ({ 'input_{}'.format(i):x for i,x in enumerate(emb)}, {'output':label})
+					yield ( np.array([emb]), np.array([label]) )
 				else :
-					yield ({ 'input_{}'.format(i):x for i,x in enumerate(topic_emb)})
+					yield (np.array([topic_emb]))
 			else :
 				if labelsFN:
 					label = float(f.readline())
@@ -145,9 +145,9 @@ def _aux_SMH(corpusFN, w2tFileName, vocSize, topicsNum, Train=False, Validate=Fa
 
 		# Yields embedding
 		if labelsFN:
-			yield ({ 'input_{}'.format(i):x for i,x in enumerate(topic_emb)}, {'output':label})
+			yield ( np.array([topic_emb]), np.array([label]) )
 		else :
-			yield ({ 'input_{}'.format(i):x for i,x in enumerate(topic_emb)})
+			yield ( np.array([topic_emb]) )
 
 
 
