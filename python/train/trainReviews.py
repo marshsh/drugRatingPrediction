@@ -33,7 +33,7 @@ def getModel(shapeInp):
 	model.add(Dropout(0.5))
 	model.add(Dense(1, kernel_initializer='normal'))
 
-	model.compile(loss='mean_squared_error',
+	model.compile(loss='mean_absolute_error',
 				  optimizer='sgd',
 				  metrics=['mae',soft_acc])
 
@@ -103,50 +103,52 @@ def getEmbedding(embeddingType, Train=False, Validate=False, Test=False):
 
 
 
-def train(embeddingType):
+def train(embeddingType,callbacksBool):
 
 	docGeneraTRAIN, shapeInp = getEmbedding(embeddingType, Train=True)
 	docGeneraVAL, valSteps = getEmbedding(embeddingType, Validate=True)
 
 	model = getModel(shapeInp)
 
-	print "Start fitting model"
-	# history = model.fit_generator(docGeneraTRAIN, steps_per_epoch=shapeInp, epochs=300, validation_data=docGeneraVAL, validation_steps=valSteps,
-	# 	callbacks=[
-	# 	keras.callbacks.ModelCheckpoint(
-	# 		'model'
-	# 		'-epoch_{epoch:02d}'
-	# 		'-regr_mae_{val_loss:.2f}',
-	# 		monitor='val_loss',
-	# 		verbose=0,
-	# 		save_best_only=True,
-	# 		save_weights_only=False,
-	# 		mode='auto',
-	# 		period=1),
-	# 	keras.callbacks.EarlyStopping(
-	# 		monitor='val_loss', 
-	# 		min_delta=0, 
-	# 		patience=5, 
-	# 		verbose=0, 
-	# 		mode='auto', 
-	# 		baseline=None, 
-	# 		restore_best_weights=False),
-	# 	keras.callbacks.TensorBoard(
-	# 		log_dir='./logs', 
-	# 		histogram_freq=0, 
-	# 		batch_size=32, 
-	# 		write_graph=True, 
-	# 		write_grads=False, 
-	# 		write_images=False, 
-	# 		embeddings_freq=0, 
-	# 		embeddings_layer_names=None, 
-	# 		embeddings_metadata=None, 
-	# 		embeddings_data=None,
-	#		update_freq='epoch')
-	# 	]
-	# )
+	if callbacksBool:
+		history = model.fit_generator(docGeneraTRAIN, steps_per_epoch=shapeInp, epochs=300, validation_data=docGeneraVAL, validation_steps=valSteps,
+			callbacks=[
+			keras.callbacks.ModelCheckpoint(
+				'modelos/model'
+				'-epoch_{epoch:02d}'
+				'-regr_mae_{val_loss:.2f}',
+				monitor='val_loss',
+				verbose=0,
+				save_best_only=True,
+				save_weights_only=False,
+				mode='auto',
+				period=1),
+			keras.callbacks.EarlyStopping(
+				monitor='val_loss', 
+				min_delta=0, 
+				patience=5, 
+				verbose=0, 
+				mode='auto', 
+				baseline=None, 
+				restore_best_weights=False),
+			keras.callbacks.TensorBoard(
+				log_dir='./logs', 
+				histogram_freq=0, 
+				batch_size=32, 
+				write_graph=True, 
+				write_grads=False, 
+				write_images=False, 
+				embeddings_freq=0, 
+				embeddings_layer_names=None, 
+				embeddings_metadata=None, 
+				embeddings_data=None,
+				update_freq='epoch')
+			]
+		)
+	else :
+		history = model.fit_generator(docGeneraTRAIN, steps_per_epoch=shapeInp, workers=0, epochs=1,  validation_data=docGeneraVAL, validation_steps=valSteps)
 
-	history = model.fit_generator(docGeneraTRAIN, steps_per_epoch=shapeInp, workers=0, epochs=1,  validation_data=docGeneraVAL, validation_steps=valSteps)
+
 
 	print "Done fitting model, now saving history"
 
@@ -162,12 +164,15 @@ def train(embeddingType):
 
 def main():
 
-	parser = argparse.ArgumntParser("Trains NN model on drugCom data reoresented as SMH or BOW vectors")
-	parser.add_argument("embeddingType", choices=["SMH", "BOW"]
+	parser = argparse.ArgumentParser("Trains NN model on drugCom data reoresented as SMH or BOW vectors")
+	parser.add_argument("embeddingType", choices=["SMH", "BOW"],
 						help = "Embedding Type")
+	parser.add_argument("-cB", "--callbacksBool", action='store_true',
+						help = "Use callbacks")
 
+	args = parser.parse_args()
 
-	train(embeddingType)
+	train(args.embeddingType,args.callbacksBool)
 
 
 if __name__ == "__main__":

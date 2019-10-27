@@ -5,6 +5,7 @@ results/*
 drugCom_SMH/*
 logs/*
 history/*
+modelos/*
 *.pyc
 
 # Compiled source #

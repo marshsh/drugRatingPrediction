@@ -18,6 +18,9 @@ mkdir `pwd`/drugCom_SMH
 echo "Making /data directory"
 mkdir `pwd`/history
 
+echo "Making /data directory"
+mkdir `pwd`/modelos
+
 
 echo "Downloading english stopwords"
 wget -cO ./data/stopwords_english.txt \
@@ -99,8 +102,9 @@ echo
 echo
 
 
-
-if true ; then
+FILE=./data/train_drugReviews40000.ifs
+if [ -f "$FILE" ]; then
+# if true ; then
 	echo "*Topic Discovering* block Not marked for processing"
 else 
 	echo
@@ -127,7 +131,9 @@ echo
 echo
 
 
-if true ; then
+FILE=./drugCom_SMH/smh_r2_l68_w0.1_s3_o0.9_m5train_drugReviews40000.IFSwords2topicsOrd
+if [ -f "$FILE" ]; then
+# if true ; then
 # if  false ; then
 	echo " *Topics Reordering* block Not marked for processing"
 else 
