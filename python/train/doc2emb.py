@@ -115,7 +115,7 @@ def _aux_SMH(corpusFN, w2tFileName, vocSize, topicsNum, Train=False, Validate=Fa
 
 	words2topics = load_words2topics(w2tFileName)
 
-	bow_genera = BOWcorpus2emb(corpusFN, vocSize, Train=False, Validate=False, labelsFN=labelsFN)
+	bow_genera = BOWcorpus2emb(corpusFN, vocSize, Train=False, Validate=False, labelsFN=labelsFN, forSMH=True)
 
 
 	for bundle in bow_genera:

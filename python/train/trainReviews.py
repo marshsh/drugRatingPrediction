@@ -9,6 +9,8 @@ from keras.layers import Dense, Dropout
 from keras import metrics
 from keras import backend
 
+import argparse
+
 
 
 def soft_acc(y_true, y_pred):
@@ -160,9 +162,12 @@ def train(embeddingType):
 
 def main():
 
-	train("BOW")
-	train("SMH")
+	parser = argparse.ArgumntParser("Trains NN model on drugCom data reoresented as SMH or BOW vectors")
+	parser.add_argument("embeddingType", choices=["SMH", "BOW"]
+						help = "Embedding Type")
 
+
+	train(embeddingType)
 
 
 if __name__ == "__main__":
