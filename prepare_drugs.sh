@@ -46,9 +46,9 @@ echo
 
 
 FILE=./data/train_drugReviews.ref
-# if [ -f "$FILE" ]; then
+if [ -f "$FILE" ]; then
 # if true ; then
-if false ; then
+# if false ; then
 	echo "$FILE exist"
 	echo "*SMH .ref and .corpus file generation* block Not marked for processing"
 else 

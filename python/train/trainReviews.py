@@ -10,6 +10,7 @@ from keras import metrics
 from keras import backend
 
 import argparse
+from time import time, localtime
 
 
 
@@ -111,12 +112,17 @@ def train(embeddingType,callbacksBool):
 	model = getModel(shapeInp)
 
 	if callbacksBool:
+
+		time = "_[{}-{}:{}]_".format(localtime().tm_mday, localtime().tm_hour, localtime().tm_min)
+
 		history = model.fit_generator(docGeneraTRAIN, steps_per_epoch=shapeInp, epochs=300, validation_data=docGeneraVAL, validation_steps=valSteps,
 			callbacks=[
 			keras.callbacks.ModelCheckpoint(
 				'modelos/model'
 				'-epoch_{epoch:02d}'
-				'-regr_mae_{val_loss:.2f}',
+				+ time +
+				'-regr_mae_{val_loss:.2f}'
+				'-soft_acc_{soft_acc:.2f}',
 				monitor='val_loss',
 				verbose=0,
 				save_best_only=True,
