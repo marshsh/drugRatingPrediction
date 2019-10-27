@@ -102,8 +102,8 @@ echo
 echo
 
 
-FILE=./data/train_drugReviews40000.ifs
-if [ -f "$FILE" ]; then
+FILE2=./data/train_drugReviews40000.ifs
+if [ -f "$FILE2" ]; then
 # if true ; then
 	echo "*Topic Discovering* block Not marked for processing"
 else 
@@ -131,8 +131,8 @@ echo
 echo
 
 
-FILE=./drugCom_SMH/smh_r2_l68_w0.1_s3_o0.9_m5train_drugReviews40000.IFSwords2topicsOrd
-if [ -f "$FILE" ]; then
+FILE3=./drugCom_SMH/smh_r2_l68_w0.1_s3_o0.9_m5train_drugReviews40000.IFSwords2topicsOrd
+if [ -f "$FILE3" ]; then
 # if true ; then
 # if  false ; then
 	echo " *Topics Reordering* block Not marked for processing"
