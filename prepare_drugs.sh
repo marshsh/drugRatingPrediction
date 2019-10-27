@@ -15,6 +15,9 @@ mkdir `pwd`/results
 echo "Making /drugCom_SMH directory"
 mkdir `pwd`/drugCom_SMH
 
+echo "Making /data directory"
+mkdir `pwd`/history
+
 
 echo "Downloading english stopwords"
 wget -cO ./data/stopwords_english.txt \

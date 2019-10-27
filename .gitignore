@@ -4,6 +4,8 @@ data/*
 results/*
 drugCom_SMH/*
 logs/*
+history/*
+*.pyc
 
 # Compiled source #
 ###################
