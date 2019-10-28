@@ -1,4 +1,4 @@
-# Discución de Resultados
+# Discusión de Resultados
 =================================
 
 Obtuvimos los siguientes resultados:
