@@ -41,8 +41,30 @@ def getModel(shapeInp):
 	return model
 
 
+def getModelCalssif(shapeInp):
+	print "Getting model with shapeInp: " + str(shapeInp)
+	"""
+	Falta modificar.
+	"""
 
-def getEmbedding(embeddingType, Train=False, Validate=False, Test=False):
+
+	model = Sequential()
+	model.add(Dense(128, input_dim=shapeInp, kernel_initializer='normal', activation='elu'))
+	model.add(Dropout(0.5))
+	model.add(Dense(64, kernel_initializer='normal', activation='elu'))
+	model.add(Dropout(0.5))
+	model.add(Dense(16, kernel_initializer='normal', activation='elu'))
+	model.add(Dropout(0.5))
+	model.add(Dense(1, kernel_initializer='normal'))
+
+	model.compile(loss='mean_absolute_error',
+				  optimizer='sgd',
+				  metrics=['mae',soft_acc])
+
+	return model
+
+
+def getDocsEmbedded(embeddingType, Train=False, Validate=False, Test=False):
 	print "Getting embeddings: " + embeddingType
 
 	# HardCoded FileNames
@@ -103,11 +125,10 @@ def getEmbedding(embeddingType, Train=False, Validate=False, Test=False):
 
 
 
-
 def train(embeddingType,callbacksBool):
 
-	docGeneraTRAIN, shapeInp = getEmbedding(embeddingType, Train=True)
-	docGeneraVAL, valSteps = getEmbedding(embeddingType, Validate=True)
+	docGeneraTRAIN, shapeInp = getDocsEmbedded(embeddingType, Train=True)
+	docGeneraVAL, valSteps = getDocsEmbedded(embeddingType, Validate=True)
 
 	model = getModel(shapeInp)
 
@@ -119,11 +140,11 @@ def train(embeddingType,callbacksBool):
 			callbacks=[
 			keras.callbacks.ModelCheckpoint(
 				'modelos/model'
-				'-epoch_{epoch:02d}'
 				+ time +
+				'epoch_{epoch:02d}'
 				'-regr_mae_{val_loss:.2f}'
 				'-soft_acc_{soft_acc:.2f}',
-				monitor='val_loss',
+				monitor='soft_acc',
 				verbose=0,
 				save_best_only=True,
 				save_weights_only=False,
