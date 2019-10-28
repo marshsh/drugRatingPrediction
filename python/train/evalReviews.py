@@ -51,7 +51,7 @@ def evaluate(embeddingType, metric):
 	# theModel = keras.models.load_model(mMname,  custom_objects={ 'soft_acc': soft_acc })
 	theModel = keras.models.load_model(mMname,  custom_objects={ 'soft_acc': halveSoft_acc })
 
-	loss = theModel.evaluate(docGeneraTEST, steps=shapeInp)
+	loss = theModel.evaluate_generator(docGeneraTEST, steps=shapeInp)
 	loss_names =  theModel.metrics_names
 
 	print loss
