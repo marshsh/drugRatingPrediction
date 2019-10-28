@@ -63,7 +63,7 @@ def BOWcorpus2emb(corpusFN, vocSize, Train=False, Validate=False, labelsFN=None,
 					label = float(f.readline())
 					yield ( np.array([emb]), np.array([label]) )
 				else :
-					yield (np.array([topic_emb]))
+					yield (np.array([emb]))
 			else :
 				if labelsFN:
 					label = float(f.readline())
@@ -129,14 +129,16 @@ def _aux_SMH(corpusFN, w2tFileName, vocSize, topicsNum, Train=False, Validate=Fa
 
 		topic_emb = [0 for i in range(topicsNum)]
 
-		for word in bow_doc:
+		for wordID, wFreq in enumerate(bow_doc):
 			wordTcs = []
-			if word in words2topics:
-				wordTcs = words2topics[word] # gets Topics related to word
+			if wFreq == 0:
+				continue
+			if wordID in words2topics:
+				wordTcs = words2topics[wordID] # gets Topics related to word
 			# sums topic frequencies to embedding
 			for doc, freq in wordTcs:
 				if doc < topicsNum:
-					topics_emb[doc] += freq
+					topic_emb[doc] += freq*wFreq
 
 
 		# Concatenates BOW vec with Topics vec if it's indicated (BOW before Topics)

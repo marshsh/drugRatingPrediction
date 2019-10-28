@@ -8,8 +8,7 @@ nltk
 
 # Observaciones
 
-Hay muchos reviews sin rating, pero dichos reviews nos pueden ayudar a tener una mejor representación de tópicos.
-
+**Ver archivo Resultados.**
 
 # Datos Importantes
 

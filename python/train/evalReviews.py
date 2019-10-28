@@ -82,10 +82,10 @@ def evaluate(embeddingType, metric):
 
 def main():
 
-	parser = argparse.ArgumentParser("Trains NN model on drugCom data reoresented as SMH or BOW vectors")
-	parser.add_argument("embeddingType", choices=["SMH", "BOW"],
+	parser = argparse.ArgumentParser("\nArguments Missing: \n [embeddingType] [metric] \n 1st --> SMH or BOW  \n 2nd --> mae or acc  \n **** \n Add -cB to train for many epochs.")
+	parser.add_argument("embeddingType", choices=["SMH", "BOW"], default="SMH",
 						help = "Embedding Type")
-	parser.add_argument("metric", choices=["mae", "acc"],
+	parser.add_argument("metric", choices=["mae", "acc"], default="mae",
 						help = "Embedding Type")
 	parser.add_argument("-cB", "--callbacksBool", action='store_true',
 						help = "Use callbacks")
